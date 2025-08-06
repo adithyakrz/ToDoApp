@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { TodoProvider } from './Contexts/TodoContext';
 function App() {
@@ -28,6 +28,19 @@ function App() {
       )
     )
     }
+
+    useEffect(() => {
+      const todos = JSON.parse(localStorage.getItem('todos'))
+      if(todos && todos.length > 0) {
+        setTodos(todos)
+      }
+      // This effect runs once when the component mounts to load todos from localStorage
+    },[])
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos))
+    // This effect runs whenever the todos state changes to save them to localStorage
+  }, [todos])
 
   return (
     <TodoProvider value = {{todos,addTodo,updateTodo,deleteTodo,toggleComplete}}>
