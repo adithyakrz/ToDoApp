@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { TodoProvider } from './Contexts/TodoContext';
+import TodoForm from './components/TodoForm';
+import { TodoItem } from './components';
+
 function App() {
   const [todos, setTodos] =useState([])
 
   const addTodo = (todo) => {
     // Ensure the todo has an id and is added to the beginning of the list
     // Using Date.now() to generate a unique id
-    setTodos((prev) > [{id: Date.now, ...todo} , ...prev])
+    setTodos((prev) => [{id: Date.now(), ...todo} , ...prev])
   }
 
   const updateTodo = (id, todo) => {
-    setTodos((prev) => prev.map((prevTodo) => {
-      prevTodo.id === todo.id ? todo : prevTodo
-    }))
+    setTodos((prev) => 
+      prev.map((prevTodo) => 
+        prevTodo.id === id ? todo : prevTodo
+    ))
   }
 
   const deleteTodo = (id) => {
@@ -43,9 +47,21 @@ function App() {
   }, [todos])
 
   return (
-    <TodoProvider value = {{todos,addTodo,updateTodo,deleteTodo,toggleComplete}}>
-      <h1>Test</h1>
-    </TodoProvider>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center pt-10">
+      <TodoProvider value={{ todos, addTodo, updateTodo, deleteTodo, toggleComplete }}>
+        <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
+          <h1 className="text-2xl font-bold mb-6 text-center text-green-700">Todo List</h1>
+          <TodoForm />
+          <div className="mt-4 space-y-2">
+            {todos.map((todo) => (
+              <div key={todo.id}>
+                <TodoItem todo={todo} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </TodoProvider>
+    </div>
   )
 }
 
